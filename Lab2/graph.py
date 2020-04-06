@@ -102,6 +102,7 @@ class Graph:
             new_edge.next_target = None
 
     def delete_edge(self, source_vertex: int, target_vertex: int):
+        # TODO add to return bool if remove was successful or not
         """
         Remvoes an edge, defined by the vertex where it leaves from and the vertex it arrives into
         :param source_vertex: Index of vertex it leaves from
