@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from enum import Enum
 import typing
+from enum import Enum
 
 if typing.TYPE_CHECKING:
     from vertex import Vertex
@@ -23,6 +23,7 @@ class Edge:
     next_target: Optional[Edge]  # The next Edge that arrives to the same target vertex, if it's None it
     # means this edge is the last element in the list of edges that arrive to the same target vertex
     previous_target: Optional[Edge]  # The previous Edge that arrives to the same target vertex, if it's None it
+
     # means this edge is the last element in the list of edges that arrive to the same target vertex
 
     def __init__(self, source: Vertex, target: Vertex, value: int):

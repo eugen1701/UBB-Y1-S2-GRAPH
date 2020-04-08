@@ -12,6 +12,9 @@ class Graph:
     Represents a directed graph
     """
 
+    vertices: Dict[int, Vertex]  # A dictionary containing all the graph vertices, the key is the vertex id,
+    # and the value is the vertex
+
     def __init__(self, number_of_vertices: int):
         self.vertices: Dict[int, Vertex] = {}
         for i in range(0, number_of_vertices):

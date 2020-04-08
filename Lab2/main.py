@@ -1,4 +1,8 @@
+from typing import Dict
+
+from dfs import dfs_main
 from graph import Graph
+from vertex import Vertex
 
 
 def read_from_file():
@@ -6,11 +10,11 @@ def read_from_file():
         line = file.readline()
         line = line.split(" ")
         vertices = int(line[0])
-        edges = int(line[1])
         graph = Graph(vertices)
         for line in file:
             line = line.split(" ")
             graph.insert_new_edge(int(line[0]), int(line[1]), int(line[2]))
+            graph.insert_new_edge(int(line[1]), int(line[0]), int(line[2]))
         return graph
 
 
@@ -22,6 +26,7 @@ def print_menu():
         "4. Insert Vertex\n"
         "5. Delete Edge\n"
         "6. Check if Edge Exists\n"
+        "7. Check connected components of the Graph\n"
     )
 
 
@@ -38,6 +43,7 @@ def read_command():
                 print("Already has edge!")
                 continue
             graph.insert_new_edge(source_vertex, target_vertex, edge_value)
+            graph.insert_new_edge(target_vertex, source_vertex, edge_value)
         elif read_value == "2":
             print(graph.count_vertex())
             for vertex in graph.get_vertex_iterator():
@@ -56,6 +62,7 @@ def read_command():
                 print("Doesn't have edge to remove")
                 continue
             graph.delete_edge(source_vertex, target_vertex)
+            graph.delete_edge(target_vertex, source_vertex)
         elif read_value == "6":
             source_vertex = int(input("Enter Source vertex:"))
             target_vertex = int(input("Enter Target vertex:"))
@@ -63,6 +70,8 @@ def read_command():
                 print("Doesn't have edge")
             else:
                 print("Graph has edge")
+        elif read_value == "7":
+            dfs_main(graph)
 
 
 read_command()
