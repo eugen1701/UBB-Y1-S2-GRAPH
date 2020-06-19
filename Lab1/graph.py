@@ -17,7 +17,7 @@ class Graph:
 
     def __init__(self, number_of_vertices: int):
         self.vertices: Dict[int, Vertex] = {}
-        for i in range(0, number_of_vertices):
+        for i in range(number_of_vertices):
             self.vertices[i] = Vertex(i)
 
     def count_vertex(self) -> int:
@@ -85,24 +85,22 @@ class Graph:
         if source_edge is None:
             self.vertices[source_vertex].first_out = new_edge
             new_edge.previous_source = None
-            new_edge.next_source = None
         else:
             for source_edge in source_edge.get_iter(EdgeIteratorDirection.NEXT_SOURCE):
                 pass
             source_edge.next_source = new_edge
             new_edge.previous_source = source_edge
-            new_edge.next_source = None
-
+        new_edge.next_source = None
         if target_edge is None:
             self.vertices[target_vertex].first_in = new_edge
             new_edge.previous_target = None
-            new_edge.next_target = None
         else:
             for target_edge in target_edge.get_iter(EdgeIteratorDirection.NEXT_TARGET):
                 pass
             target_edge.next_target = new_edge
             new_edge.previous_target = target_edge
-            new_edge.next_target = None
+
+        new_edge.next_target = None
 
     def delete_edge(self, source_vertex: int, target_vertex: int):
         """
@@ -138,10 +136,10 @@ class Graph:
         edge = self.vertices[source_vertex].first_out
         if edge is None:
             return False
-        for edge in edge.get_iter(EdgeIteratorDirection.NEXT_SOURCE):
-            if edge.target.id == target_vertex:
-                return True
-        return False
+        return any(
+            edge.target.id == target_vertex
+            for edge in edge.get_iter(EdgeIteratorDirection.NEXT_SOURCE)
+        )
 
     def get_copy(self) -> Graph:
         """
