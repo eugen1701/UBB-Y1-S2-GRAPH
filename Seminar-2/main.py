@@ -13,7 +13,7 @@ class MatrGraph:
         self._matr = []
         for i in range(n):
             self._matr.append([])
-            for j in range(n):
+            for _ in range(n):
                 self._matr[i].append(False)
 
     def parseX(self):
@@ -23,19 +23,11 @@ class MatrGraph:
 
     def parseNout(self, x):
         """Returns an iterable containing the outbound neighbours of x"""
-        list = []
-        for i in range(len(self._matr[x])):
-            if self._matr[x][i]:
-                list.append(i)
-        return list
+        return [i for i in range(len(self._matr[x])) if self._matr[x][i]]
 
     def parseNin(self, x):
         """Returns an iterable containing the inbound neighbours of x"""
-        list = []
-        for i in range(len(self._matr)):
-            if self._matr[i][x]:
-                list.append(i)
-        return list
+        return [i for i in range(len(self._matr)) if self._matr[i][x]]
 
     def isEdge(self, x, y):
         """Returns True if there is an edge from x to y, False otherwise"""
@@ -68,11 +60,7 @@ class DictGraph:
 
     def parseNin(self, x):
         """Returns an iterable containing the inbound neighbours of x"""
-        list = []
-        for i in self._dict.keys():
-            if x in self._dict[i]:
-                list.append(i)
-        return list
+        return [i for i in self._dict.keys() if x in self._dict[i]]
 
     def isEdge(self, x, y):
         """Returns True if there is an edge from x to y, False otherwise"""
@@ -124,10 +112,9 @@ class DoubleDictGraph:
 def accessible(g, s):
     """Returns the set of vertices of the graph g that are accessible
     from the vertex s"""
-    acc = set()
-    acc.add(s)
+    acc = {s}
     list = [s]
-    while len(list) > 0:
+    while list:
         x = list[0]
         list = list[1:]
         for y in g.parseNout(x):
@@ -233,7 +220,7 @@ def run(ctor, n, m):
     start_time = time.time()
     g = initRandomGraph(ctor, n, m)
     for x in g.parseX():
-        for y in g.parseNin(x):
+        for _ in g.parseNin(x):
             pass
     end_time = time.time()
     print("{} (n={}, m={}): {}s".format(ctor.__name__, n, m, end_time - start_time))
@@ -243,9 +230,11 @@ def main():
     representations = [DictGraph, DoubleDictGraph, MatrGraph]
     n_possible_size = [1000, 10000, 100000, 1000000]
     for size in n_possible_size:
-        task_list = []
-        for representation in representations:
-            task_list.append(threading.Thread(target=run, args=(representation, size, size*10)))
+        task_list = [
+            threading.Thread(target=run, args=(representation, size, size * 10))
+            for representation in representations
+        ]
+
         for thread in task_list:
             thread.start()
         for thread in task_list:
